@@ -34,7 +34,11 @@ public class PlantillaOperationsUseCase  {
         .defaultIfEmpty(new HistorialModel())
         .flatMap(historial -> {
                     // verificar si es el mismo id que no sume el contador
-                    historial.setCounter(savedPlantilla.getId().equals(historial.getPlantillaId()) ? historial.getCounter() : historial.getCounter() + 1);
+                    historial.setCounter(
+                        historial.getCounter() != null && savedPlantilla.getId().equals(historial.getPlantillaId()) 
+                        ? historial.getCounter() 
+                        : historial.getCounter() == null ?  1 : historial.getCounter() + 1
+                    );
                     historial.setPlantillaId(savedPlantilla.getId());
                     historial.setLastDescription(savedPlantilla.getDescripcion());
                     return historialOperationsUseCase.saveHistorial(historial);
