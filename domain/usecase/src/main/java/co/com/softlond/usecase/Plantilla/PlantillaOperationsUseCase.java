@@ -10,6 +10,7 @@ import co.com.softlond.model.gateways.PlantillaGateways;
 import co.com.softlond.usecase.Historial.HistorialOperationsUseCase;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class PlantillaOperationsUseCase  {
@@ -29,11 +30,8 @@ public class PlantillaOperationsUseCase  {
         // verificar si es el mismo id que no sume el contador
 
         return plantillaGateways.savePlantilla(plantilla)
-            // .doOnSuccess(savedPlantilla -> saveHistorialAsync(savedPlantilla.getDescripcion())
-            // .subscribeOn(Schedulers.boundedElastic())
-            // .subscribe());
-
-            .flatMap(savedPlantilla -> historialOperationsUseCase.getHistorial()
+            .doOnSuccess(savedPlantilla -> 
+                historialOperationsUseCase.getHistorial()
                 .defaultIfEmpty(new HistorialModel())
                 .flatMap(historial -> {
                     historial.setCounter(historial.getCounter() + 1);
@@ -41,7 +39,8 @@ public class PlantillaOperationsUseCase  {
                     historial.setLastDescription(savedPlantilla.getDescripcion());
                     return historialOperationsUseCase.saveHistorial(historial);
                 })
-                .thenReturn(savedPlantilla)
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe()
             );
     };
 
@@ -52,15 +51,5 @@ public class PlantillaOperationsUseCase  {
     public Flux<PlantillaModel> getAllDataPlantilla(){
         return plantillaGateways.getAllDataPlantilla();
     }
-
-    // private Mono<Void> saveHistorialAsync(String descripcion){
-    //     return historialGateways.getHistorial()
-    //     .defaultIfEmpty(new HistorialModel())
-    //     .flatMap(historial -> {
-    //         historial.setCounter(historial.getCounter() + 1);
-    //         historial.setLastDescription(descripcion);
-    //         return historialGateways.saveHistorial(historial);
-    //     });
-    // }
 
 }
