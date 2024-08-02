@@ -27,14 +27,14 @@ public class PlantillaOperationsUseCase  {
         /* lOGICA DE NEGOCIO */
         plantilla.setFechaActualizacion(new Date(System.currentTimeMillis()));
 
-        // verificar si es el mismo id que no sume el contador
-
+        
         return plantillaGateways.savePlantilla(plantilla)
-            .doOnSuccess(savedPlantilla -> 
-                historialOperationsUseCase.getHistorial()
-                .defaultIfEmpty(new HistorialModel())
-                .flatMap(historial -> {
-                    historial.setCounter(historial.getCounter() + 1);
+        .doOnSuccess(savedPlantilla -> 
+        historialOperationsUseCase.getHistorial()
+        .defaultIfEmpty(new HistorialModel())
+        .flatMap(historial -> {
+                    // verificar si es el mismo id que no sume el contador
+                    historial.setCounter(savedPlantilla.getId().equals(historial.getPlantillaId()) ? historial.getCounter() : historial.getCounter() + 1);
                     historial.setPlantillaId(savedPlantilla.getId());
                     historial.setLastDescription(savedPlantilla.getDescripcion());
                     return historialOperationsUseCase.saveHistorial(historial);
