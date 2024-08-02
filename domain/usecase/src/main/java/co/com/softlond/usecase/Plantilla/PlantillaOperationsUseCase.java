@@ -33,8 +33,6 @@ public class PlantillaOperationsUseCase  {
             // .subscribeOn(Schedulers.boundedElastic())
             // .subscribe());
 
-            // .flatMap(savedPlantilla -> historialOperationsUseCase.updateHistorial(savedPlantilla.getDescripcion())
-            // .then(Mono.just(savedPlantilla)));
             .flatMap(savedPlantilla -> historialOperationsUseCase.getHistorial()
                 .defaultIfEmpty(new HistorialModel())
                 .flatMap(historial -> {
