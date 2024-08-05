@@ -25,10 +25,4 @@ public class HistorialGatewaysImpl implements HistorialGateways {
       .map(HistorialEntity -> HistorialMapper.toModel(HistorialEntity));
   }
 
-  @Override
-  public Mono<HistorialModel> getHistorialById(String id){
-    return reactiveHistorialMongoRepository.findPlantillaById(id)
-      .map(historialEntity -> HistorialMapper.toModel(historialEntity));
-  }
-
 }

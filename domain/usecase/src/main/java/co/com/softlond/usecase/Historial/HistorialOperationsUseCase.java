@@ -22,8 +22,4 @@ public class HistorialOperationsUseCase {
     return historialGateways.getHistorial();
   }
 
-  public Mono<HistorialModel> getHistorialById(String id){
-    return historialGateways.getHistorialById(id);
-  }
-
 }

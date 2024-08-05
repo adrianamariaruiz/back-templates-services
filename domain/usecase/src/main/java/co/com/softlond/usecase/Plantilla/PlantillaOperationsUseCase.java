@@ -11,12 +11,15 @@ import co.com.softlond.usecase.Historial.HistorialOperationsUseCase;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+// import reactor.util.Logger;
+// import reactor.util.Loggers;
 
 @Service
 public class PlantillaOperationsUseCase  {
     
     private final PlantillaGateways plantillaGateways;
     private final HistorialOperationsUseCase historialOperationsUseCase;
+    // private final Logger log = Loggers.getLogger(PlantillaOperationsUseCase.class);
 
     public PlantillaOperationsUseCase(PlantillaGateways plantillaGateways, HistorialOperationsUseCase historialOperationsUseCase) {
         this.plantillaGateways = plantillaGateways;
@@ -24,22 +27,22 @@ public class PlantillaOperationsUseCase  {
     }
 
     public Mono<PlantillaModel> savePlantilla(PlantillaModel plantilla) {
+        // log.info("Guardando plantilla");
+        // log.error("Error guardando plantilla");
+
         /* lOGICA DE NEGOCIO */
         plantilla.setFechaActualizacion(new Date(System.currentTimeMillis()));
 
-        
         return plantillaGateways.savePlantilla(plantilla)
-        .doOnSuccess(savedPlantilla -> 
-        historialOperationsUseCase.getHistorial()
-        .defaultIfEmpty(new HistorialModel())
-        .flatMap(historial -> {
+            .doOnSuccess(savedPlantilla -> 
+                historialOperationsUseCase.getHistorial()
+                .defaultIfEmpty(new HistorialModel())
+                .flatMap(historial -> {
                     // verificar si es el mismo id que no sume el contador
-                    historial.setCounter(
-                        historial.getCounter() != null && savedPlantilla.getId().equals(historial.getPlantillaId()) 
-                        ? historial.getCounter() 
-                        : historial.getCounter() == null ?  1 : historial.getCounter() + 1
-                    );
-                    historial.setPlantillaId(savedPlantilla.getId());
+                    if (plantilla.getId() == null) {
+                        historial.setCounter(historial.getCounter() == null ? 1 : historial.getCounter() + 1);
+                    }    
+                   
                     historial.setLastDescription(savedPlantilla.getDescripcion());
                     return historialOperationsUseCase.saveHistorial(historial);
                 })

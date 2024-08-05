@@ -13,7 +13,6 @@ import lombok.Setter;
 @Builder
 public class HistorialModel {
   private String id;
-  private String plantillaId;
   private Integer counter;
   private String lastDescription;
 }

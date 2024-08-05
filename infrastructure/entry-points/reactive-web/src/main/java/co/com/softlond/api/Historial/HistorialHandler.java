@@ -27,17 +27,9 @@ public class HistorialHandler {
   public Mono<ServerResponse> saveHistorial(ServerRequest request){
       return request.bodyToMono(HistorialModel.class)
           .flatMap(historialOperationsUseCase::saveHistorial)
-          .flatMap(historial -> ServerResponse.ok().bodyValue(historial))
+          .flatMap(historial -> ServerResponse.ok().bodyValue("Historial guardada"))
           .switchIfEmpty(ServerResponse.noContent().build())
           .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
-  }
-
-  public Mono<ServerResponse> getHistorialById(ServerRequest request){
-    String id = request.pathVariable("id");
-    return historialOperationsUseCase.getHistorialById(id)
-    .flatMap(historial -> ServerResponse.ok().bodyValue(historial))
-    .switchIfEmpty(ServerResponse.noContent().build())
-    .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
   }
    
 }
