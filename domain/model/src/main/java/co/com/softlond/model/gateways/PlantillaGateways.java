@@ -7,5 +7,6 @@ import reactor.core.publisher.Mono;
 public interface PlantillaGateways {
     Mono<PlantillaModel> savePlantilla(PlantillaModel plantilla);
     Mono<PlantillaModel> getPlantillaById(String id);
+    Mono<Void> deletePlantilla(String id);
     Flux<PlantillaModel> getAllDataPlantilla();
 }

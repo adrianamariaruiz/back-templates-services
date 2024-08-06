@@ -38,7 +38,7 @@ public class PlantillaOperationsUseCase  {
                 historialOperationsUseCase.getHistorial()
                 .defaultIfEmpty(new HistorialModel())
                 .flatMap(historial -> {
-                    // verificar si es el mismo id que no sume el contador
+                    // verifica si es el mismo id que no sume el contador
                     if (plantilla.getId() == null) {
                         historial.setCounter(historial.getCounter() == null ? 1 : historial.getCounter() + 1);
                     }    
@@ -57,6 +57,10 @@ public class PlantillaOperationsUseCase  {
 
     public Flux<PlantillaModel> getAllDataPlantilla(){
         return plantillaGateways.getAllDataPlantilla();
+    }
+
+    public Mono<Void> deletePlantilla(String id){
+        return plantillaGateways.deletePlantilla(id);
     }
 
 }

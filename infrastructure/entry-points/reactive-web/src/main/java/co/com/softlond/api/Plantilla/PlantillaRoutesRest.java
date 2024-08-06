@@ -16,6 +16,7 @@ public class PlantillaRoutesRest {
             .GET("/api/plantillas", plantillaHandler::getAllPlantillas)
             .GET("/api/plantilla/{id}", plantillaHandler::getPlantilla)
             .POST("/api/plantilla/save", plantillaHandler::savePlantilla)
+            .DELETE("/api/plantilla/{id}", plantillaHandler::deletePlantilla)
             .build();
         
     }

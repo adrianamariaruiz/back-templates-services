@@ -20,7 +20,7 @@ public class PlantillaHandler {
     public Mono<ServerResponse> savePlantilla(ServerRequest request) {
         return request.bodyToMono(PlantillaModel.class)
                 .flatMap(plantillaOperationsUseCase::savePlantilla)
-                .flatMap(plantilla -> ServerResponse.ok().bodyValue("Guardando plantilla"))
+                .flatMap(plantilla -> ServerResponse.ok().bodyValue("Plantilla guardada"))
                 .switchIfEmpty(ServerResponse.noContent().build())
                 .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
     }
@@ -39,6 +39,14 @@ public class PlantillaHandler {
             .flatMap(plantillas -> ServerResponse.ok().bodyValue(plantillas))
             .switchIfEmpty(ServerResponse.noContent().build())
             .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
+    }
+
+    public Mono<ServerResponse> deletePlantilla(ServerRequest request){
+        String id = request.pathVariable("id");
+        return plantillaOperationsUseCase.deletePlantilla(id)
+        .then(ServerResponse.ok().bodyValue("plantilla eliminada"))
+        .switchIfEmpty(ServerResponse.noContent().build())
+        .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
     }
 }
 
