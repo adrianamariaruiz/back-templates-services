@@ -6,13 +6,12 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import co.com.softlond.model.PlantillaModel;
 import co.com.softlond.usecase.Plantilla.PlantillaOperationsUseCase;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 public class PlantillaHandler {
     
-    private final PlantillaOperationsUseCase plantillaOperationsUseCase;
+    private final PlantillaOperationsUseCase plantillaOperationsUseCase;   
 
     public PlantillaHandler(PlantillaOperationsUseCase plantillaOperationsUseCase) {
         this.plantillaOperationsUseCase = plantillaOperationsUseCase;
@@ -21,7 +20,7 @@ public class PlantillaHandler {
     public Mono<ServerResponse> savePlantilla(ServerRequest request) {
         return request.bodyToMono(PlantillaModel.class)
                 .flatMap(plantillaOperationsUseCase::savePlantilla)
-                .flatMap(plantilla -> ServerResponse.ok().bodyValue(plantilla))
+                .flatMap(plantilla -> ServerResponse.ok().bodyValue("Plantilla guardada"))
                 .switchIfEmpty(ServerResponse.noContent().build())
                 .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
     }
@@ -42,4 +41,12 @@ public class PlantillaHandler {
             .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
     }
 
+    public Mono<ServerResponse> deletePlantilla(ServerRequest request){
+        String id = request.pathVariable("id");
+        return plantillaOperationsUseCase.deletePlantilla(id)
+        .then(ServerResponse.ok().bodyValue("plantilla eliminada"))
+        .switchIfEmpty(ServerResponse.noContent().build())
+        .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
+    }
 }
+

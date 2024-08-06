@@ -31,5 +31,10 @@ public class PlantillaGatewaysImpl implements PlantillaGateways {
         return reactivePlantillaMongoRepository.findAll()
             .map(plantillaEntity -> PlantillaMapper.toModel(plantillaEntity));
     }
+
+    @Override
+    public Mono<Void> deletePlantilla(String id){
+        return reactivePlantillaMongoRepository.deleteById(id);
+    }
     
 }
