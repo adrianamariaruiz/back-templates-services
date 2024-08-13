@@ -2,11 +2,9 @@ package co.com.softlond.mongo.Plantilla;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import co.com.softlond.model.PlantillaModel;
 import co.com.softlond.model.gateways.PlantillaGateways;
-import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +15,7 @@ public class PlantillaGatewaysImpl implements PlantillaGateways {
     private ReactivePlantillaMongoRepository reactivePlantillaMongoRepository;
 
     @Override
-    public Mono<PlantillaModel> savePlantilla(@Valid @RequestBody PlantillaModel plantilla) {
+    public Mono<PlantillaModel> savePlantilla(PlantillaModel plantilla) {
         return reactivePlantillaMongoRepository.save(PlantillaMapper.toCollection(plantilla))
                 .map(plantillaEntity -> PlantillaMapper.toModel(plantillaEntity));
     }

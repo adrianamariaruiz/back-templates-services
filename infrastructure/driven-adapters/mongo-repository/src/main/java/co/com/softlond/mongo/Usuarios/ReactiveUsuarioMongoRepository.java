@@ -6,4 +6,6 @@ import co.com.softlond.mongo.Collections.UsuarioCollections;
 
 public interface ReactiveUsuarioMongoRepository extends ReactiveMongoRepository<UsuarioCollections, String> {
 
+
+
 }

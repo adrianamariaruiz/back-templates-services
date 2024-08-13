@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import co.com.softlond.api.validation.ObjectValidator;
 import co.com.softlond.model.PlantillaModel;
 import co.com.softlond.usecase.Plantilla.PlantillaOperationsUseCase;
 import reactor.core.publisher.Mono;
@@ -11,18 +12,21 @@ import reactor.core.publisher.Mono;
 @Service
 public class PlantillaHandler {
     
-    private final PlantillaOperationsUseCase plantillaOperationsUseCase;   
+    private final PlantillaOperationsUseCase plantillaOperationsUseCase; 
+    private final ObjectValidator objectValidator;  
 
-    public PlantillaHandler(PlantillaOperationsUseCase plantillaOperationsUseCase) {
+    public PlantillaHandler(PlantillaOperationsUseCase plantillaOperationsUseCase, ObjectValidator objectValidator) {
         this.plantillaOperationsUseCase = plantillaOperationsUseCase;
+        this.objectValidator = objectValidator;
     }
 
     public Mono<ServerResponse> savePlantilla(ServerRequest request) {
         return request.bodyToMono(PlantillaModel.class)
-                .flatMap(plantillaOperationsUseCase::savePlantilla)
-                .flatMap(plantilla -> ServerResponse.ok().bodyValue("Plantilla guardada"))
-                .switchIfEmpty(ServerResponse.noContent().build())
-                .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
+            .doOnNext(objectValidator::validate)
+            .flatMap(plantillaOperationsUseCase::savePlantilla)
+            .flatMap(plantilla -> ServerResponse.ok().bodyValue("Plantilla guardada"))
+            .switchIfEmpty(ServerResponse.noContent().build())
+            .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
     }
 
     public Mono<ServerResponse> getPlantilla(ServerRequest request){
