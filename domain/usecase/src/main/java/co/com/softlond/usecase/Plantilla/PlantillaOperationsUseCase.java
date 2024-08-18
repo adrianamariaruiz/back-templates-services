@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import co.com.softlond.model.HistorialModel;
 import co.com.softlond.model.PlantillaModel;
+import co.com.softlond.model.PlantillaEnums.EstadoEnum;
 import co.com.softlond.model.gateways.PlantillaGateways;
 import co.com.softlond.usecase.Historial.HistorialOperationsUseCase;
 import reactor.core.publisher.Flux;
@@ -32,6 +33,8 @@ public class PlantillaOperationsUseCase  {
 
         /* lOGICA DE NEGOCIO */
         plantilla.setFechaActualizacion(new Date(System.currentTimeMillis()));
+        plantilla.setVersion(1);
+        plantilla.setActivo(EstadoEnum.ACTIVO);
 
         return plantillaGateways.savePlantilla(plantilla)
             .doOnSuccess(savedPlantilla -> 
@@ -50,6 +53,24 @@ public class PlantillaOperationsUseCase  {
                 .subscribe()
             );
     };
+
+    public Mono<PlantillaModel> updatePlantilla(String id, PlantillaModel plantillaModel){
+        return plantillaGateways.updatePlantilla(id, plantillaModel)
+            .flatMap(existingPlantilla -> {
+                existingPlantilla.setNombre(plantillaModel.getNombre());
+                existingPlantilla.setDescripcion(plantillaModel.getDescripcion());
+                existingPlantilla.setFechaActualizacion(new Date(System.currentTimeMillis()));
+                existingPlantilla.setFecha(plantillaModel.getFecha());
+                existingPlantilla.setAutor(plantillaModel.getAutor());
+                existingPlantilla.setVersion(existingPlantilla.getVersion() + 1);
+                existingPlantilla.setCategoria(plantillaModel.getCategoria());
+                existingPlantilla.setActivo(plantillaModel.getActivo());
+                existingPlantilla.setEtiquetas(plantillaModel.getEtiquetas());
+                
+                return plantillaGateways.savePlantilla(existingPlantilla);
+            })
+            .switchIfEmpty(Mono.error(new RuntimeException("Plantilla no encontrada")));
+    }
 
     public Mono<PlantillaModel> getPlantillaById(String id){
         return plantillaGateways.getPlantillaById(id);

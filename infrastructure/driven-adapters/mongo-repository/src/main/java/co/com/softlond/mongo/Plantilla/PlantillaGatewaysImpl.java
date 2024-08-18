@@ -21,6 +21,12 @@ public class PlantillaGatewaysImpl implements PlantillaGateways {
     }
 
     @Override
+    public Mono<PlantillaModel> updatePlantilla(String id, PlantillaModel plantillaModel){
+        return reactivePlantillaMongoRepository.findById(id)
+            .map(plantillaEntity -> PlantillaMapper.toModel(plantillaEntity));
+    }
+
+    @Override
     public Mono<PlantillaModel> getPlantillaById(String id){
         return reactivePlantillaMongoRepository.findById(id)
             .map(plantillaEntity -> PlantillaMapper.toModel(plantillaEntity));

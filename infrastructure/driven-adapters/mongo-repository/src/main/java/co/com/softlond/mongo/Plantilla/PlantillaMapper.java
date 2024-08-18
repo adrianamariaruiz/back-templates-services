@@ -12,6 +12,11 @@ public class PlantillaMapper {
                 .fecha(plantillaCollections.getFecha())
                 .descripcion(plantillaCollections.getDescripcion())
                 .fechaActualizacion(plantillaCollections.getFechaActualizacion())
+                .autor(plantillaCollections.getAutor())
+                .version(plantillaCollections.getVersion())
+                .categoria(plantillaCollections.getCategoria())
+                .activo(plantillaCollections.getActivo())
+                .etiquetas(plantillaCollections.getEtiquetas())
                 .build();
     }
     
@@ -22,6 +27,11 @@ public class PlantillaMapper {
         plantillaCollections.setFecha(plantillaModel.getFecha());
         plantillaCollections.setDescripcion(plantillaModel.getDescripcion());
         plantillaCollections.setFechaActualizacion(plantillaModel.getFechaActualizacion());
+        plantillaCollections.setAutor(plantillaModel.getAutor());
+        plantillaCollections.setVersion(plantillaModel.getVersion());
+        plantillaCollections.setCategoria(plantillaModel.getCategoria());
+        plantillaCollections.setActivo(plantillaModel.getActivo());
+        plantillaCollections.setEtiquetas(plantillaModel.getEtiquetas());
         return plantillaCollections;
     }
 }

@@ -5,6 +5,9 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import co.com.softlond.model.PlantillaEnums.CategoriaEnum;
+import co.com.softlond.model.PlantillaEnums.EstadoEnum;
+import co.com.softlond.model.PlantillaEnums.EtiquetaEnum;
 import lombok.Data;
 
 @Data
@@ -17,5 +20,10 @@ public class PlantillaCollections {
     private Date fecha;
     private String descripcion;
     private Date fechaActualizacion;
+    private String autor;
+    private int version;
+    private CategoriaEnum categoria;
+    private EstadoEnum activo;
+    private EtiquetaEnum etiquetas;
     
 }

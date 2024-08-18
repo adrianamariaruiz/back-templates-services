@@ -29,6 +29,15 @@ public class PlantillaHandler {
             .onErrorResume(error -> ServerResponse.badRequest().bodyValue(error.getMessage()));
     }
 
+    public Mono<ServerResponse> updatePlantilla(ServerRequest request){
+        String id = request.pathVariable("id");
+        return request.bodyToMono(PlantillaModel.class)
+            .flatMap(plantilla -> plantillaOperationsUseCase.updatePlantilla(id, plantilla))
+            .flatMap(updatedPlantilla -> ServerResponse.ok().bodyValue(updatedPlantilla))
+            .switchIfEmpty(ServerResponse.notFound().build())
+            .onErrorResume(e -> ServerResponse.badRequest().bodyValue(e.getMessage()));
+    }
+
     public Mono<ServerResponse> getPlantilla(ServerRequest request){
         String id = request.pathVariable("id");
         return plantillaOperationsUseCase.getPlantillaById(id)
